@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhanthyMovie 定价 · 盈亏地图</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#fff; --ink:#1e2330; --muted:#6b7280;
+    --video:#5b7cfa; --good:#16a34a; --goodBg:#ecfdf5; --bad:#dc2626; --badBg:#fef2f2;
+    --line:#e5e7eb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);padding:24px 16px 80px;max-width:900px;margin:0 auto;line-height:1.65;}
+  h1{font-size:24px;margin-bottom:6px;}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:22px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  h2{font-size:17px;margin-bottom:8px;}
+  .hint{color:var(--muted);font-size:13px;margin-bottom:10px;}
+
+  /* 大数字 */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+  .stat{border-radius:14px;padding:16px;}
+  .stat .n{font-size:34px;font-weight:800;line-height:1.2;}
+  .stat .d{font-size:13px;color:var(--muted);}
+  .stat.bad{background:var(--badBg);} .stat.bad .n{color:var(--bad);}
+  .stat.warn{background:#fff7ed;} .stat.warn .n{color:#ea580c;}
+
+  /* 地图 */
+  .mapWrap{position:relative;width:100%;}
+  canvas{width:100%;border-radius:12px;border:1px solid var(--line);cursor:crosshair;display:block;touch-action:none;}
+  .axisX{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px;padding:0 2px;}
+  .axisTitleX{text-align:center;font-size:13px;color:var(--muted);margin-top:2px;}
+  .mapLegend{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-top:10px;}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-2px;}
+
+  /* 读数面板 */
+  .readout{border-radius:14px;padding:16px;margin-top:14px;font-size:14px;transition:.2s;}
+  .readout.good{background:var(--goodBg);border:1px solid #bbf7d0;}
+  .readout.bad{background:var(--badBg);border:1px solid #fecaca;}
+  .readout .big{font-size:20px;font-weight:800;}
+
+  /* 旋钮 */
+  .knob{margin:12px 0;}
+  .knob .row{display:flex;align-items:center;gap:12px;}
+  .knob label{width:215px;font-size:14px;flex-shrink:0;}
+  .knob input{flex:1;accent-color:var(--video);}
+  .knob .val{width:90px;text-align:right;font-weight:700;flex-shrink:0;}
+  .knob .note{font-size:12px;color:var(--muted);margin-left:227px;}
+
+  .boss{background:#1e2330;color:#fff;border-radius:14px;padding:18px;font-size:15px;line-height:1.8;}
+  .boss b{color:#fca5a5;}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:26px;}
+</style>
+</head>
+<body>
+
+<h1>🗺️ 盈亏地图：这套定价如何盈亏？</h1>
+<p class="sub">整张图就是所有可能的经营情况。<b>红色 = 亏，绿色 = 赚</b>。鼠标在图上拖那个圆点，就是"如果真实世界长这样，我们赚还是亏"。</p>
+
+<!-- 大数字 -->
+<div class="card">
+  <div class="stats">
+    <div class="stat bad"><div class="n" id="lossReal">--%</div><div class="d">在<b>现实区</b>（图片占比3~10% × 方案定价0.75~0.98）里，亏钱情况的占比</div></div>
+    <div class="stat warn"><div class="n" id="lossAll">--%</div><div class="d">整张地图（所有参数组合）里，亏钱区域的占比</div></div>
+  </div>
+</div>
+
+<!-- 地图 -->
+<div class="card">
+  <h2>横轴：用户花多少钱在图片上 ｜ 纵轴：我们把视频卖多少钱</h2>
+  <p class="hint">虚线框是"现实区"：用户图片消费大概率落在 3~10%，而方案的四个档位卖价都压在 0.75~0.98。看看这个框里是什么颜色。</p>
+  <div class="mapWrap"><canvas id="map" width="820" height="480"></canvas></div>
+  <div class="axisX"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span></div>
+  <div class="axisTitleX">→ 用户消费里图片（爆米花）占的比例</div>
+  <div class="mapLegend">
+    <span><i class="sw" style="background:#e85d5d"></i>亏钱区</span>
+    <span><i class="sw" style="background:#5fbf7f"></i>赚钱区</span>
+    <span><i class="sw" style="background:#fff;border:1px solid #999"></i>白色细线 = 盈亏平衡线</span>
+    <span>― 横虚线 = 四个档位的卖价 / libtv / 成本线</span>
+  </div>
+  <div class="readout bad" id="readout"></div>
+</div>
+
+<!-- 旋钮 -->
+<div class="card">
+  <h2>两个背景旋钮（拧了整张地图会重画）</h2>
+  <div class="knob"><div class="row">
+    <label>fast 模型分担的视频量</label>
+    <input type="range" id="fastShare" min="0" max="100" step="5" value="50">
+    <span class="val" id="v_fastShare">50%</span>
+  </div></div>
+  <div class="knob"><div class="row">
+    <label>fast 的真实进货价（元/秒）</label>
+    <input type="range" id="fastCost" min="0.50" max="1.05" step="0.01" value="0.84">
+    <span class="val" id="v_fastCost">0.84 元</span>
+  </div><div class="note">含视频输入 0.50（乐观）/ 不含 0.84（现实）。拧到 0.50 看看绿区扩大多少，再拧回 0.84 ——这就是 fast 救不救得了场。</div></div>
+</div>
+
+<!-- 给领导的话 -->
+<div class="card">
+  <div class="boss" id="bossLine"></div>
+</div>
+
+<footer>口径说明：颜色 = 用户每消费 1 元的毛利率（已实现口径，不含躺账沉淀）。视频标准链路成本 1.05 元/秒、图片成本率 55%，数据来自 PhanthyMovie收费汇总.xlsx</footer>
+
+<script>
+const COST_STD = 1.05, IMG_MARGIN = 0.45;
+const R_MIN = 0, R_MAX = 0.40;        // 横轴：图片占比
+const P_MIN = 0.70, P_MAX = 1.60;     // 纵轴：视频卖价
+const REAL_R = [0.03, 0.10], REAL_P = [0.75, 0.98]; // 现实区
+const TIER_PRICES = [
+  {p:0.98, label:"体验包 0.98"},
+  {p:0.90, label:"进阶 0.90"},
+  {p:0.83, label:"专业 0.83"},
+  {p:0.75, label:"企业 0.75"},
+];
+const REFS = [
+  {p:0.86, label:"libtv 0.86", color:"#7c3aed"},
+];
+
+const cv = document.getElementById("map"), ctx = cv.getContext("2d");
+const W = cv.width, H = cv.height;
+const $ = id => document.getElementById(id);
+let dot = {r:0.05, p:0.90}; // 当前拖动点：默认现实区中间
+
+const x2r = x => R_MIN + (x/W)*(R_MAX-R_MIN);
+const y2p = y => P_MAX - (y/H)*(P_MAX-P_MIN);
+const r2x = r => (r-R_MIN)/(R_MAX-R_MIN)*W;
+const p2y = p => (P_MAX-p)/(P_MAX-P_MIN)*H;
+
+function avgCost(){
+  const fs = +$("fastShare").value/100, fc = +$("fastCost").value;
+  return fs*fc + (1-fs)*COST_STD;
+}
+// 每消费1元的毛利率
+function margin(r, p, ac){ return (1-r)*(1-ac/p) + r*IMG_MARGIN; }
+
+function colorOf(m){
+  // m: -0.5 ~ +0.3 → 红–白–绿
+  if(m>=0){
+    const t = Math.min(m/0.3, 1);
+    return [Math.round(255-160*t), Math.round(255-64*t), Math.round(255-128*t)]; // → (95,191,127)
+  }else{
+    const t = Math.min(-m/0.5, 1);
+    return [Math.round(255-23*t), Math.round(255-162*t), Math.round(255-162*t)]; // → (232,93,93)
+  }
+}
+
+function draw(){
+  const ac = avgCost();
+  $("v_fastShare").textContent = Math.round(+$("fastShare").value)+"%";
+  $("v_fastCost").textContent = (+$("fastCost").value).toFixed(2)+" 元";
+
+  // 热力图
+  const img = ctx.createImageData(W,H);
+  let lossAll=0, totAll=0, lossReal=0, totReal=0;
+  for(let y=0;y<H;y++){
+    const p = y2p(y);
+    for(let x=0;x<W;x++){
+      const r = x2r(x);
+      const m = margin(r,p,ac);
+      const [cr,cg,cb] = colorOf(m);
+      const idx=(y*W+x)*4;
+      img.data[idx]=cr; img.data[idx+1]=cg; img.data[idx+2]=cb; img.data[idx+3]=255;
+      totAll++; if(m<0) lossAll++;
+      if(r>=REAL_R[0]&&r<=REAL_R[1]&&p>=REAL_P[0]&&p<=REAL_P[1]){ totReal++; if(m<0) lossReal++; }
+    }
+  }
+  ctx.putImageData(img,0,0);
+
+  // 盈亏平衡线：p*(r) = ac / (1 + 0.45r/(1-r))
+  ctx.beginPath();
+  ctx.strokeStyle="#fff"; ctx.lineWidth=2.5;
+  let started=false;
+  for(let x=0;x<=W;x+=2){
+    const r=x2r(x);
+    const pstar = ac/(1 + IMG_MARGIN*r/(1-r));
+    const y=p2y(pstar);
+    if(y<0||y>H){ started=false; continue; }
+    started?ctx.lineTo(x,y):ctx.moveTo(x,y); started=true;
+  }
+  ctx.stroke();
+
+  // 成本线 / 竞品线 / 档位线
+  const lines = [
+    {p:COST_STD, label:"标准链路成本 1.05", color:"#374151"},
+    ...REFS,
+    ...TIER_PRICES.map(t=>({p:t.p,label:t.label,color:"#1d4ed8"})),
+  ];
+  ctx.font="12px sans-serif"; ctx.setLineDash([6,4]); ctx.lineWidth=1.2;
+  lines.forEach(l=>{
+    const y=p2y(l.p);
+    ctx.strokeStyle=l.color; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    ctx.fillStyle=l.color;
+    ctx.fillText(l.label, 8, y-4);
+  });
+  ctx.setLineDash([]);
+
+  // 现实区框
+  ctx.setLineDash([8,5]); ctx.strokeStyle="#1e2330"; ctx.lineWidth=2;
+  const rx=r2x(REAL_R[0]), rw=r2x(REAL_R[1])-rx;
+  const ry=p2y(REAL_P[1]), rh=p2y(REAL_P[0])-ry;
+  ctx.strokeRect(rx,ry,rw,rh);
+  ctx.setLineDash([]);
+  ctx.fillStyle="#1e2330";
+  ctx.font="bold 13px sans-serif";
+  ctx.fillText("⬅ 现实区：图片3~10% × 方案卖价0.75~0.98", rx+rw+8, ry+16);
+
+  // 纵轴刻度
+  ctx.fillStyle="#6b7280"; ctx.font="11px sans-serif";
+  for(let p=0.8;p<=1.6;p+=0.2){
+    ctx.fillText(p.toFixed(1)+"元/秒", W-52, p2y(p)+4);
+  }
+
+  // 拖动点
+  const m = margin(dot.r, dot.p, ac);
+  const dx=r2x(dot.r), dy=p2y(dot.p);
+  ctx.beginPath(); ctx.arc(dx,dy,11,0,7); ctx.fillStyle= m<0?"#dc2626":"#16a34a"; ctx.fill();
+  ctx.lineWidth=3; ctx.strokeStyle="#fff"; ctx.stroke();
+  ctx.font="bold 14px sans-serif"; ctx.fillStyle="#1e2330";
+  ctx.fillText("你在这", dx+15, dy+5);
+
+  // 大数字
+  $("lossAll").textContent = Math.round(lossAll/totAll*100)+"%";
+  $("lossReal").textContent = Math.round(lossReal/totReal*100)+"%";
+
+  // 读数
+  const ro=$("readout");
+  ro.className="readout "+(m<0?"bad":"good");
+  const perYuan = Math.abs(m).toFixed(2);
+  ro.innerHTML = `<span class="big">${m<0?"💸 亏":"😄 赚"}：用户每消费 1 元，${m<0?"倒贴":"净赚"} ${perYuan} 元（毛利率 ${(m*100).toFixed(1)}%）</span><br>
+    当前点：图片占比 <b>${(dot.r*100).toFixed(0)}%</b>，视频卖 <b>${dot.p.toFixed(2)} 元/秒</b>，视频混合进货价 <b>${ac.toFixed(2)} 元/秒</b>。
+    ${m<0?`要回到白线（盈亏平衡）：图片占比不变的话，视频得卖 <b>${(ac/(1+IMG_MARGIN*dot.r/(1-dot.r))).toFixed(2)} 元/秒</b>以上。`:`离白线还有安全垫，可以拿一部分让利做营销。`}`;
+
+  // 给领导的话
+  $("bossLine").innerHTML = `这套"视频打折引流"方案能不能赚钱，<b>不取决于我们怎么定价，取决于用户把多少钱花在图片上</b>。方案假设图片占 20%，但真实用户大概只有 5%——把这个真实值代进去，方案定价区间（虚线框）里 <b>${Math.round(lossReal/totReal*100)}% 的情况都是亏的</b>。<b>① 有什么产品机制能把图片消费从 5% 拉到 15% 以上？② 如果拉不动，视频可不可以卖回 ${ (avgCost()/(1+IMG_MARGIN*0.05/0.95)).toFixed(2) } 元/秒以上？</b>两个都答不了，这方案就是在烧钱买流水。`;
+}
+
+// 拖动交互
+let dragging=false;
+function setDot(e){
+  const rect=cv.getBoundingClientRect();
+  const cx=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+  const cy=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+  dot.r=Math.min(Math.max(x2r(cx/rect.width*W),R_MIN),R_MAX);
+  dot.p=Math.min(Math.max(y2p(cy/rect.height*H),P_MIN),P_MAX);
+  draw();
+}
+cv.addEventListener("mousedown",e=>{dragging=true;setDot(e);});
+window.addEventListener("mousemove",e=>{if(dragging)setDot(e);});
+window.addEventListener("mouseup",()=>dragging=false);
+cv.addEventListener("touchstart",e=>{dragging=true;setDot(e);e.preventDefault();},{passive:false});
+cv.addEventListener("touchmove",e=>{if(dragging){setDot(e);e.preventDefault();}},{passive:false});
+window.addEventListener("touchend",()=>dragging=false);
+
+["fastShare","fastCost"].forEach(id=>$(id).addEventListener("input",draw));
+draw();
+</script>
+</body>
+</html>
