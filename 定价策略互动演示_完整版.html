@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhanthyMovie 定价策略 · 小卖部完整版</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#fff; --ink:#1e2330; --muted:#6b7280;
+    --video:#5b7cfa; --videoLight:#e3e9ff;
+    --img:#f59e0b; --imgLight:#fff3dc;
+    --stuck:#a78bfa; --stuckLight:#f3e8ff;
+    --good:#16a34a; --goodBg:#ecfdf5; --bad:#dc2626; --badBg:#fef2f2;
+    --line:#e5e7eb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);padding:24px 16px 80px;max-width:900px;margin:0 auto;line-height:1.65;}
+  h1{font-size:25px;margin-bottom:6px;}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:24px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:22px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .step{display:inline-block;background:var(--ink);color:#fff;font-size:12px;border-radius:99px;padding:2px 10px;margin-bottom:10px;}
+  h2{font-size:18px;margin-bottom:8px;}
+  .hint{color:var(--muted);font-size:13px;margin-bottom:12px;}
+  .why{background:#f6f7fb;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:14px;}
+
+  /* ===== 货架：可乐 & 爆米花价签 ===== */
+  .shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+  .goods{border-radius:14px;padding:16px;position:relative;overflow:hidden;}
+  .goods.v{background:var(--videoLight);} .goods.i{background:var(--imgLight);}
+  .goods .gtop{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .goods .icon{font-size:44px;}
+  .goods b{font-size:15px;display:block;}
+  .goods small{color:var(--muted);}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
+  .tag{background:#fff;border-radius:8px;padding:5px 10px;font-size:13px;border:1px solid var(--line);}
+  .tag b{display:inline;font-size:15px;}
+  .delta{border-radius:8px;padding:6px 10px;font-size:13px;font-weight:700;display:inline-block;transition:.2s;}
+  .delta.pos{background:var(--goodBg);color:var(--good);}
+  .delta.neg{background:var(--badBg);color:var(--bad);}
+
+  /* ===== 人物卡 ===== */
+  .personas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;}
+  .p-card{border:2px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s;background:#fff;text-align:left;}
+  .p-card:hover{border-color:#b9c4f8;}
+  .p-card.active{border-color:var(--video);background:var(--videoLight);}
+  .p-card .emoji{font-size:26px;}
+  .p-card b{display:block;font-size:15px;margin:4px 0 2px;}
+  .p-card .price{font-size:13px;color:var(--muted);}
+  .p-card .tag2{display:inline-block;margin-top:8px;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--muted);}
+
+  /* ===== 滑杆 ===== */
+  .knob{margin:13px 0;}
+  .knob .row{display:flex;align-items:center;gap:12px;}
+  .knob label{width:225px;font-size:14px;flex-shrink:0;}
+  .knob input[type=range]{flex:1;accent-color:var(--video);}
+  .knob .val{width:95px;text-align:right;font-weight:700;font-size:15px;flex-shrink:0;}
+  .knob .note{font-size:12px;color:var(--muted);margin-left:237px;}
+  .warn{color:var(--bad);font-weight:600;}
+  .bigNum{font-size:21px;font-weight:700;min-width:105px;text-align:right;}
+  .sliderRow{display:flex;align-items:center;gap:14px;margin:10px 0 4px;}
+  .sliderRow input{flex:1;accent-color:var(--video);}
+
+  /* ===== 分钱条 & 购物车 ===== */
+  .splitBar{display:flex;height:46px;border-radius:10px;overflow:hidden;margin:14px 0 8px;font-size:13px;color:#fff;font-weight:600;}
+  .splitBar>div{display:flex;align-items:center;justify-content:center;transition:.3s;white-space:nowrap;overflow:hidden;}
+  .legend{display:flex;gap:16px;font-size:13px;color:var(--muted);flex-wrap:wrap;}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:99px;margin-right:5px;}
+  .carts{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;}
+  .cart{flex:1;min-width:230px;border-radius:12px;padding:12px 14px;font-size:14px;}
+  .cart.v{background:var(--videoLight);} .cart.i{background:var(--imgLight);}
+  .cart .n{font-size:23px;font-weight:800;}
+  .stack{font-size:19px;letter-spacing:2px;line-height:1.5;word-break:break-all;min-height:28px;}
+  .stack small{font-size:12px;color:var(--muted);letter-spacing:0;}
+
+  /* ===== 剧本按钮 ===== */
+  .presets{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .preset{border:2px solid var(--line);background:#fff;border-radius:99px;padding:7px 16px;font-size:14px;cursor:pointer;transition:.15s;}
+  .preset:hover{border-color:#b9c4f8;}
+  .preset.active{border-color:var(--video);background:#eef2ff;font-weight:700;}
+
+  /* ===== 钱的流向图 ===== */
+  .flow{display:flex;align-items:stretch;gap:0;margin:18px 0 6px;}
+  .node{border-radius:12px;padding:12px 10px;text-align:center;font-size:13px;flex-shrink:0;width:120px;display:flex;flex-direction:column;justify-content:center;}
+  .node .nicon{font-size:30px;}
+  .node b{font-size:13px;}
+  .node.u{background:#eef2ff;} .node.p{background:#fef9c3;} .node.s{background:#fee2e2;}
+  .pipe{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 6px;min-width:70px;}
+  .pipe .tube{height:14px;border-radius:99px;background:#e5e7eb;position:relative;overflow:hidden;}
+  .pipe .fill{height:100%;border-radius:99px;transition:.3s;}
+  .pipe .plabel{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;white-space:nowrap;}
+  .pocket{margin-top:8px;font-size:12px;border-radius:8px;padding:4px 6px;background:#fff;}
+
+  /* ===== 账本 ===== */
+  .book{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:8px;}
+  .brow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px;}
+  .brow:last-child{border-bottom:none;}
+  .brow .desc b{display:block;}
+  .brow .desc span{font-size:12px;color:var(--muted);}
+  .brow .amt{font-weight:800;font-size:17px;white-space:nowrap;}
+  .brow.in{background:#f0fdf4;} .brow.subtotal{background:#f6f7fb;} .brow.stuck{background:var(--stuckLight);}
+  .pos{color:var(--good);} .neg{color:var(--bad);} .neu{color:var(--stuck);}
+
+  /* ===== 判决书 ===== */
+  .verdict{border-radius:14px;padding:18px;margin-top:16px;font-size:14px;}
+  .verdict.good{background:var(--goodBg);border:1px solid #bbf7d0;}
+  .verdict.bad{background:var(--badBg);border:1px solid #fecaca;}
+  .verdict .big{font-size:22px;font-weight:800;margin-bottom:6px;}
+  .fix{background:#fff;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:13px;color:var(--muted);}
+
+  /* ===== 对比 ===== */
+  .lrow{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:14px;}
+  .lrow .label{width:165px;flex-shrink:0;}
+  .lrow .barWrap{flex:1;background:#f1f2f6;border-radius:6px;height:22px;overflow:hidden;}
+  .lrow .bar{height:100%;border-radius:6px;transition:.3s;}
+  .lrow .val{width:85px;text-align:right;font-weight:700;flex-shrink:0;}
+  .badge{font-size:11px;border-radius:99px;padding:1px 8px;margin-left:6px;}
+  .badge.us{background:var(--videoLight);color:var(--video);}
+  .badge.them{background:#fee2e2;color:var(--bad);}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<h1>🏪 PhanthyMovie 小卖部 · 定价完整演示</h1>
+<p class="sub">可乐引流、爆米花赚钱的故事 + 真实成本压力测试，合二为一。从上往下玩：货架 → 选人 → 充钱 → 拧旋钮 → 看账本。</p>
+
+<!-- 货架 -->
+<div class="card">
+  <span class="step">货架</span>
+  <h2>店里就两种商品，价签是活的（跟着下面的旋钮变）</h2>
+  <div class="shelf">
+    <div class="goods v">
+      <div class="gtop"><span class="icon">🥤</span><div><b>可乐 = seedance 2.0 视频</b><small>家家都卖，用户只比这个价</small></div></div>
+      <div class="tags">
+        <span class="tag">我们卖 <b id="colaSell">--</b> /秒</span>
+        <span class="tag">进货 <b id="colaCost">--</b> /秒</span>
+      </div>
+      <span class="delta" id="colaDelta"></span>
+      <div class="why" style="margin-top:10px">便宜是故意的：比官价（1.5）和 libtv（0.86）都狠，把人吸进店。</div>
+    </div>
+    <div class="goods i">
+      <div class="gtop"><span class="icon">🍿</span><div><b>爆米花 = 图片 / 剧本 / 文本</b><small>进店了才会顺手买</small></div></div>
+      <div class="tags">
+        <span class="tag">我们卖 <b>1.00</b> /份</span>
+        <span class="tag">进货 <b>0.55</b> /份</span>
+      </div>
+      <span class="delta pos">每卖 1 元赚 0.45 ✓</span>
+      <div class="why" style="margin-top:10px">怎么卖都赚。可乐亏的钱，指望它补——<b>前提是用户真的买</b>。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 选人 -->
+<div class="card">
+  <span class="step">第 1 步</span>
+  <h2>进店的是谁？</h2>
+  <p class="hint">档位越高：可乐越便宜（折扣深），充值里允许买可乐的比例 β 也越高。</p>
+  <div class="personas" id="personas"></div>
+</div>
+
+<!-- 充钱 -->
+<div class="card">
+  <span class="step">第 2 步</span>
+  <h2>充一笔钱，看它被切成两个口袋</h2>
+  <div class="sliderRow">
+    <span>充值</span>
+    <input type="range" id="topup" min="100" max="10000" step="100" value="1000">
+    <span class="bigNum" id="v_topup">¥1000</span>
+  </div>
+  <div class="splitBar">
+    <div id="barV" style="background:var(--video)"></div>
+    <div id="barI" style="background:var(--img)"></div>
+  </div>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--video)"></i>可乐口袋（只能生视频）</span>
+    <span><i class="dot" style="background:var(--img)"></i>爆米花口袋（图片/剧本随便花）</span>
+  </div>
+  <div class="carts">
+    <div class="cart v">🥤 最多能喝 <span class="n" id="vSec">--</span> 秒 720P
+      <div class="stack" id="vStack"></div>
+    </div>
+    <div class="cart i">🍿 最多能吃 <span class="n" id="iCnt">--</span> 张图
+      <div class="stack" id="iStack"></div>
+    </div>
+  </div>
+  <div class="why" id="splitWhy"></div>
+</div>
+
+<!-- 压力测试台 -->
+<div class="card">
+  <span class="step">第 3 步</span>
+  <h2>现实长什么样？选个剧本或自己拧</h2>
+  <p class="hint">两个著名的坑都在这：fast 不一定便宜、用户可能 95% 的钱全砸视频。</p>
+  <div class="presets">
+    <button class="preset" onclick="loadPreset(0)">😇 理想剧本（v1方案的假设）</button>
+    <button class="preset active" onclick="loadPreset(1)">😅 现实剧本（图片只占5%）</button>
+    <button class="preset" onclick="loadPreset(2)">💀 最惨剧本（全是大客户）</button>
+  </div>
+
+  <div class="knob"><div class="row">
+    <label>可乐口袋被喝掉多少</label>
+    <input type="range" id="vUse" min="30" max="100" step="5">
+    <span class="val" id="v_vUse"></span>
+  </div><div class="note">重度生产用户基本 100% 打满，散户可能只喝一半。</div></div>
+
+  <div class="knob"><div class="row">
+    <label>fast 模型分担的视频量</label>
+    <input type="range" id="fastShare" min="0" max="100" step="5">
+    <span class="val" id="v_fastShare"></span>
+  </div></div>
+
+  <div class="knob"><div class="row">
+    <label>fast 的真实进货价（元/秒）</label>
+    <input type="range" id="fastCost" min="0.50" max="1.05" step="0.01">
+    <span class="val" id="v_fastCost"></span>
+  </div><div class="note"><span class="warn">坑①：</span>fast 含视频输入 0.50，<b>不含视频输入 0.84</b>。用户都走文生/首次图生的话，fast 根本不省钱。</div></div>
+
+  <div class="knob"><div class="row">
+    <label>用户消费里爆米花占比</label>
+    <input type="range" id="imgShare" min="0" max="40" step="1">
+    <span class="val" id="v_imgShare"></span>
+  </div><div class="note"><span class="warn">坑②：</span>方案按 图:视频=2:8 设计，但真实可能只有 5% 的钱花在图片——爆米花卖不动，可乐窟窿堵不上。</div></div>
+</div>
+
+<!-- 账本 -->
+<div class="card">
+  <span class="step">第 4 步</span>
+  <h2>平台的账本：钱从哪来，到哪去</h2>
+
+  <div class="flow">
+    <div class="node u"><span class="nicon">👛</span><b>用户钱包</b></div>
+    <div class="pipe">
+      <div class="tube"><div class="fill" style="background:var(--good);width:100%"></div></div>
+      <div class="plabel" id="flowIn">充值 →</div>
+    </div>
+    <div class="node p"><span class="nicon">🏪</span><b>我们小卖部</b>
+      <div class="pocket" id="flowKeep">留下 --</div>
+      <div class="pocket" style="background:var(--stuckLight)" id="flowStuck">躺账 --</div>
+    </div>
+    <div class="pipe">
+      <div class="tube"><div class="fill" id="flowOutBar" style="background:var(--bad);width:50%"></div></div>
+      <div class="plabel" id="flowOut">进货 →</div>
+    </div>
+    <div class="node s"><span class="nicon">🏭</span><b>字节 / 谷歌<br>（模型上游）</b></div>
+  </div>
+  <p class="hint" style="margin-top:4px">中间黄色小店留下的，才可能是利润；紫色"躺账"是用户没花完的钱——现金在我们这，但欠着服务，不能当利润花。</p>
+
+  <div class="book" id="book"></div>
+  <div class="verdict" id="verdict"></div>
+</div>
+
+<!-- 街上比价 -->
+<div class="card">
+  <span class="step">第 5 步</span>
+  <h2>街上的可乐价（用户为什么进我们店）</h2>
+  <div id="cmp"></div>
+  <div class="why">对外只讲一句：<b>"顶级视频模型最低官价 5 折，1 秒 720P 最低 0.75 元。"</b>不提任何模型进货价——商务红线。</div>
+</div>
+
+<footer>成本数据：PhanthyMovie收费汇总.xlsx · 演示用数字，非最终定价</footer>
+
+<script>
+const COST_STD = 1.05, IMG_COST_RATE = 0.55, OFFICIAL = 1.5, LIBTV = 0.86, IMG_PRICE = 0.5;
+const $ = id => document.getElementById(id);
+const fmt = n => "¥" + Math.round(n).toLocaleString();
+const f2 = n => n.toFixed(2);
+
+const TIERS = [
+  {emoji:"🐣", name:"尝鲜小白", plan:"体验包 49元/月", p:0.98, beta:0.50, tag:"先玩玩看"},
+  {emoji:"✍️", name:"个人创作者", plan:"进阶会员 199元/月", p:0.90, beta:0.60, tag:"每周更新短剧"},
+  {emoji:"🎬", name:"小工作室", plan:"专业版 4999元/年", p:0.83, beta:0.70, tag:"6人团队接单"},
+  {emoji:"🏢", name:"影视基地", plan:"企业版 9999元/年", p:0.75, beta:0.80, tag:"量大管饱"},
+];
+let cur = 1;
+
+// 剧本：[人物, 充值, 额度使用%, fast占比%, fast成本, 图片占比%]
+const PRESETS = [
+  [1, 1000, 100, 50, 0.50, 20],
+  [1, 1000, 100, 50, 0.84, 5],
+  [3, 10000, 100, 30, 0.84, 5],
+];
+const KNOBS = ["topup","vUse","fastShare","fastCost","imgShare"];
+
+function loadPreset(i){
+  const [persona, ...vals] = PRESETS[i];
+  cur = persona;
+  vals.forEach((v,k)=>$(KNOBS[k]).value=v);
+  document.querySelectorAll(".preset").forEach((b,k)=>b.classList.toggle("active",k===i));
+  renderPersonas(); render();
+}
+function pick(i){
+  cur=i;
+  document.querySelectorAll(".preset").forEach(b=>b.classList.remove("active"));
+  renderPersonas(); render();
+}
+function renderPersonas(){
+  $("personas").innerHTML = TIERS.map((t,i)=>`
+    <div class="p-card ${i===cur?'active':''}" onclick="pick(${i})">
+      <span class="emoji">${t.emoji}</span><b>${t.name}</b>
+      <div class="price">${t.plan}</div>
+      <div class="tag2">🥤${f2(t.p)}元/秒 · 可乐口袋${t.beta*100}%</div>
+    </div>`).join("");
+}
+function stack(icon, count, per, unit){
+  const n = Math.min(Math.ceil(count/per), 24);
+  return icon.repeat(Math.max(n,0)) + ` <small>1个${icon}≈${per}${unit}</small>`;
+}
+function seg(w,color,label){
+  const pct = Math.max(w*100,0);
+  return `<div style="width:${pct}%;background:${color};height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;transition:.3s">${pct>10?label:""}</div>`;
+}
+
+function render(){
+  const t = TIERS[cur];
+  const R = +$("topup").value;
+  const vUse = +$("vUse").value/100;
+  const fastShare = +$("fastShare").value/100;
+  const fastCost = +$("fastCost").value;
+  const imgShare = +$("imgShare").value/100;
+
+  $("v_topup").textContent = fmt(R);
+  $("v_vUse").textContent = Math.round(vUse*100)+"%";
+  $("v_fastShare").textContent = Math.round(fastShare*100)+"%";
+  $("v_fastCost").textContent = f2(fastCost)+" 元";
+  $("v_imgShare").textContent = Math.round(imgShare*100)+"%";
+
+  // 货架价签
+  const avgVCost = fastShare*fastCost + (1-fastShare)*COST_STD;
+  $("colaSell").textContent = f2(t.p);
+  $("colaCost").textContent = f2(avgVCost);
+  const perYuan = avgVCost/t.p - 1;
+  const cd = $("colaDelta");
+  if(perYuan>0){ cd.className="delta neg"; cd.textContent=`每收 1 元倒贴 ${f2(perYuan)} 元 ✗`; }
+  else{ cd.className="delta pos"; cd.textContent=`每收 1 元赚 ${f2(-perYuan)} 元 ✓`; }
+
+  // 分钱条 & 购物车
+  const vMoney = R*t.beta, iMoney = R*(1-t.beta);
+  $("barV").style.width=(t.beta*100)+"%";
+  $("barI").style.width=((1-t.beta)*100)+"%";
+  $("barV").textContent = `🥤 ${fmt(vMoney)}（${t.beta*100}%）`;
+  $("barI").textContent = `🍿 ${fmt(iMoney)}`;
+  const maxSec = vMoney/t.p, maxImg = iMoney/IMG_PRICE;
+  $("vSec").textContent = Math.floor(maxSec);
+  $("iCnt").textContent = Math.floor(maxImg);
+  $("vStack").innerHTML = stack("🥤", maxSec, 50, "秒");
+  $("iStack").innerHTML = stack("🍿", maxImg, 100, "张");
+  $("splitWhy").innerHTML = `你是<b>${t.name}</b>：充 ${fmt(R)}，<b>${fmt(vMoney)}</b> 进可乐口袋（${f2(t.p)} 元/秒）。喝完想续？<b>再充一笔</b>或<b>升级档位</b>（β 更大、可乐更便宜）——"让你全在我这做"的钩子就是它。`;
+
+  // 用户行为推演
+  const Sv = vMoney*vUse;
+  const wantImg = imgShare>=1 ? Infinity : Sv*imgShare/(1-imgShare);
+  const Si = Math.min(wantImg, R-Sv);
+  const stuckM = R - Sv - Si;
+  const secs = Sv/t.p;
+  const vCost = secs*avgVCost, iCost = Si*IMG_COST_RATE;
+  const vMargin = Sv-vCost, iMargin = Si-iCost;
+  const realized = vMargin+iMargin;
+  const outTotal = vCost+iCost;
+
+  // 流向图
+  $("flowIn").textContent = `充值 ${fmt(R)} →`;
+  $("flowOut").textContent = `进货 ${fmt(outTotal)} →`;
+  $("flowOutBar").style.width = Math.min(outTotal/R*100,100)+"%";
+  const keepEl = $("flowKeep");
+  keepEl.textContent = `${realized>=0?"赚":"亏"} ${fmt(Math.abs(realized))}`;
+  keepEl.style.color = realized>=0?"var(--good)":"var(--bad)";
+  $("flowStuck").textContent = `躺账 ${fmt(stuckM)}`;
+
+  // 账本流水
+  const rows = [
+    {cls:"in", b:`👛 用户充值进来`, s:`现金 +${fmt(R)}（先别高兴，这是欠人家的服务）`, amt:"+"+fmt(R), c:"pos"},
+    {cls:"", b:`🥤 用户喝了 ${Math.floor(secs)} 秒可乐，收了 ${fmt(Sv)}`, s:`按混合进货价 ${f2(avgVCost)} 元/秒，付给字节 ${fmt(vCost)} → 可乐${vMargin>=0?"赚":"亏"} ${fmt(Math.abs(vMargin))}`, amt:"−"+fmt(vCost), c:"neg"},
+    {cls:"", b:`🍿 用户吃了 ${fmt(Si)} 的爆米花`, s:`进货成本 55% = ${fmt(iCost)} → 爆米花赚 ${fmt(iMargin)}${imgShare<0.1?"（占比太低，赚不了几个钱）":""}`, amt:"−"+fmt(iCost), c:"neg"},
+    {cls:"subtotal", b:`🧮 已实现毛利（只算真用掉的）`, s:`可乐${vMargin>=0?"+":"−"}${Math.abs(Math.round(vMargin))} ＋ 爆米花+${Math.round(iMargin)}`, amt:(realized>=0?"+":"−")+fmt(Math.abs(realized)).slice(1), c:realized>=0?"pos":"neg"},
+    {cls:"stuck", b:`💤 还有 ${fmt(stuckM)} 躺在账上`, s:`付费积分不清零，他哪天回来喝可乐就要兑现成本——缓冲垫，不是利润`, amt:fmt(stuckM), c:"neu"},
+  ];
+  $("book").innerHTML = rows.map(r=>`
+    <div class="brow ${r.cls}">
+      <div class="desc"><b>${r.b}</b><span>${r.s}</span></div>
+      <span class="amt ${r.c}">${r.amt}</span>
+    </div>`).join("");
+
+  // 判决书
+  const c = avgVCost/t.p;
+  let needImg=null;
+  if(c>1){ const k=(c-1)/0.45; needImg=k/(1+k); }
+  const k2 = imgShare>=1?Infinity:imgShare/(1-imgShare);
+  const needP = avgVCost/(1+0.45*k2);
+  const v = $("verdict");
+  const fixes = [];
+  if(realized<0){
+    if(needImg!==null) fixes.push(`爆米花占比拉到 <b>${Math.round(needImg*100)}%</b> 才打平（现在 ${Math.round(imgShare*100)}%）——靠产品引导：把分镜图、九宫格、角色三视图做成视频工作流的必经步骤`);
+    fixes.push(`或可乐卖价提到 <b>${f2(needP)} 元/秒</b> 以上（现在 ${f2(t.p)}）`);
+    fixes.push(`或把 fast 引到"含视频输入"链路（进货 0.50）再提高 fast 占比`);
+    fixes.push(`再不行就认账：这档是获客成本，靠会员费（4999/9999 纯权益费）+ 躺账沉淀兜底，用"超额回收"限制亏损上限`);
+  }
+  v.className = "verdict " + (realized>=0?"good":"bad");
+  v.innerHTML = `
+    <div class="big">${realized>=0?"😄 这单小卖部赚":"💸 这单小卖部亏"} ${fmt(Math.abs(realized))}</div>
+    用户每消费 1 元，我们付出去 ${f2(outTotal/Math.max(Sv+Si,1))} 元进货。
+    可乐成本率 ${Math.round(c*100)}%${c>1?"（卖一秒亏一秒）":"（可乐本身也有毛利）"}，爆米花占比 ${Math.round(imgShare*100)}%。
+    ${fixes.length?`<div class="fix">怎么救：<br>· ${fixes.join("<br>· ")}</div>`:""}`;
+
+  // 街上比价
+  const cmpRows = [
+    {label:"官方报价", val:OFFICIAL, them:true},
+    {label:"libtv（竞品）", val:LIBTV, them:true},
+    ...TIERS.map((x,i)=>({label:`${x.emoji} 我们·${x.name}`, val:x.p, us:i===cur})),
+  ];
+  $("cmp").innerHTML = cmpRows.map(r=>`
+    <div class="lrow" style="${r.us?'background:var(--videoLight);border-radius:8px;padding:4px 8px;':''}">
+      <span class="label">${r.label}${r.us?'<span class="badge us">你在这</span>':''}${r.them?'<span class="badge them">对手</span>':''}</span>
+      <div class="barWrap"><div class="bar" style="width:${r.val/OFFICIAL*100}%;background:${r.them?'#9ca3af':'var(--video)'}"></div></div>
+      <span class="val">${f2(r.val)}元/秒</span>
+    </div>`).join("");
+}
+
+KNOBS.forEach(id=>$(id).addEventListener("input",()=>{
+  document.querySelectorAll(".preset").forEach(b=>b.classList.remove("active"));
+  render();
+}));
+renderPersonas();
+loadPreset(1);
+</script>
+</body>
+</html>
