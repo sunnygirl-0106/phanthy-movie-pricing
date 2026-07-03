@@ -61,6 +61,8 @@
   .b-green{background:var(--greenBg);color:var(--greenD);} .b-violet{background:var(--violetBg);color:var(--violetD);}
   .price{font-size:32px;font-weight:800;letter-spacing:-.5px;color:#fff;}
   .price small{font-size:13px;font-weight:600;color:var(--sub);margin-left:3px;}
+  .grant{font-size:12px;color:var(--sub);margin:6px 0 2px;}
+  .grant b{color:var(--cy);font-weight:800;}
 
   .discs{display:flex;gap:8px;margin:14px 0 4px;}
   .chip{flex:1;border:1px solid var(--panelBd);border-radius:12px;padding:9px 10px;text-align:center;background:var(--panel2);}
@@ -160,7 +162,7 @@
 
     <!-- 充值叠加 / 升级模拟 -->
     <div class="simbar">
-      <span class="slab">模拟当前已购档位</span>
+      <span class="slab">模拟当前已购档位（此栏仅供理解，开发无需实现）</span>
       <select class="simsel" id="curSel">
         <option value="0">未购买</option>
         <option value="199">标准版 · 199 元</option>
@@ -189,6 +191,7 @@
       <div class="card" data-price="199" data-name="标准版">
         <span class="badge b-teal">✦ 标准版</span>
         <div class="price">199<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>22000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">9 折</div></div>
         </div>
@@ -207,6 +210,7 @@
       <div class="card" data-price="899" data-name="进阶版">
         <span class="badge b-teal">✦✦ 进阶版</span>
         <div class="price">899<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>105000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">85 折</div></div>
         </div>
@@ -226,6 +230,7 @@
         <span class="ribbon amber">个人推荐</span>
         <span class="badge b-amber">♛ 专业版</span>
         <div class="price">2999<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>370000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">8 折</div></div>
         </div>
@@ -252,6 +257,7 @@
       <div class="card" data-price="999" data-name="高级版">
         <span class="badge b-green">🏢 高级版</span>
         <div class="price">999<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>117000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">85 折</div></div>
         </div>
@@ -273,6 +279,7 @@
       <div class="card" data-price="4999" data-name="豪华版">
         <span class="badge b-green">🏢 豪华版</span>
         <div class="price">4999<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>620000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">8 折</div></div>
         </div>
@@ -292,6 +299,7 @@
       <div class="card" data-price="9999" data-name="大师版">
         <span class="badge b-green">🏢 大师版</span>
         <div class="price">9999<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>1330000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">75 折</div></div>
         </div>
@@ -312,6 +320,7 @@
         <span class="ribbon violet">旗舰</span>
         <span class="badge b-violet">👑 至尊版</span>
         <div class="price">29999<small>元 / 月</small></div>
+        <div class="grant">一次性发放积分 <b>4280000</b></div>
         <div class="discs">
           <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">7 折</div></div>
         </div>
