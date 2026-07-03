@@ -130,9 +130,6 @@
   .simsel:focus{outline:none;border-color:var(--cy);}
   .simsel option{background:#141417;color:var(--ink);}
 
-  .card.locked{opacity:.42;filter:grayscale(.55);}
-  .card.locked .btn{pointer-events:none;}
-  .btn.locked{background:var(--panel2);border-color:var(--panelBd);color:var(--dim);}
   .btn.current{background:var(--panel2);border-color:var(--cyBd);color:var(--cy);}
   .btn.upgrade{background:linear-gradient(135deg,#34e0e8,#0aa5b0);color:#04232a;}
   .cur-tag{position:absolute;top:-11px;left:16px;font-size:11px;font-weight:800;color:#04232a;
@@ -173,7 +170,7 @@
         <option value="9999">大师版 · 9999 元</option>
         <option value="29999">至尊版 · 29999 元</option>
       </select>
-      <span class="shint">低于当前档位的套餐自动置灰，更高档位显示“再充 N 元升级”（补差升档，个人 / 团队统一按价格排序）。</span>
+      <span class="shint">低于当前档位的套餐也可直接开通（购买后重置为该档权益、会员时长重置）；更高档位显示“再充 N 元升级”（补差升档，个人 / 团队统一按价格排序）。</span>
     </div>
 
     <!-- 切换 -->
@@ -406,12 +403,11 @@
         var btn = c.querySelector('.btn');
         c.classList.remove('locked','iscur');
         if(cur === 0){
-          btn.className = btn.dataset.baseCls;
-          btn.textContent = btn.dataset.baseTxt;
+          btn.className = btn.dataset.baseCls === 'btn ghost' ? 'btn teal' : btn.dataset.baseCls;
+          btn.textContent = btn.dataset.baseTxt === '当前套餐' ? '立即开通' : btn.dataset.baseTxt;
         } else if(p < cur){
-          c.classList.add('locked');
-          btn.className = 'btn locked';
-          btn.textContent = '已低于当前档位';
+          btn.className = btn.dataset.baseCls === 'btn ghost' ? 'btn teal' : btn.dataset.baseCls;
+          btn.textContent = '立即开通';
         } else if(p === cur){
           c.classList.add('iscur');
           btn.className = 'btn current';
