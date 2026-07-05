@@ -3,138 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhanMovie 会员体系 · 7 档完整版</title>
+<title>PhanthyMovie 会员体系 · 7 档完整版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#08080a; --ink:#f4f4f6; --sub:#a1a1aa; --dim:#6b6b76; --line:rgba(255,255,255,.09);
-    --panel:#141417; --panel2:#1b1b1f; --panelBd:rgba(255,255,255,.08);
-    --cy:#34e0e8; --cyD:#0aa5b0; --cyBg:rgba(52,224,232,.13); --cyBd:rgba(52,224,232,.35);
-    --amber:#f5b23b; --amberBg:rgba(245,178,59,.14); --amberD:#f5c46a;
-    --green:#34e0e8; --greenBg:rgba(52,224,232,.13); --greenD:#5eead4;
-    --violet:#a78bfa; --violetBg:rgba(167,139,250,.15); --violetD:#c4b5fd;
-    --card:#141417; --radius:18px;
-    --font:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;-webkit-font-smoothing:antialiased;font-size:13.5px;
-    background-image:radial-gradient(1100px 420px at 12% 118%,rgba(80,90,255,.18),transparent 60%),radial-gradient(900px 380px at 88% 122%,rgba(52,224,232,.14),transparent 60%);
-    background-attachment:fixed;}
+    --bg:#05080a;
+    --ink:#f4fbfa; --sub:#8ba3a1; --dim:#5f7a78; --dim2:#7c918f;
+    --line:rgba(255,255,255,.08);
+    --cardGrad:linear-gradient(180deg,#0e1618,#0a1012);
+    --panel2:rgba(255,255,255,.02);
 
-  .topbar{background:rgba(10,10,12,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 34px;display:flex;align-items:center;gap:28px;position:sticky;top:0;z-index:20;}
+    --teal:#3fe0d0; --tealBright:#5ce9d8; --tealDeep:#33cfe0; --tealInk:#053430;
+    --tealBd:rgba(63,224,208,.32); --tealBg:rgba(63,224,208,.10);
+
+    --gold:#e3c48a; --goldBd:rgba(214,178,120,.45); --goldBg:rgba(214,178,120,.10);
+    --violet:#c4b5fd; --violetD:#a78bfa; --violetBd:rgba(167,139,250,.42); --violetBg:rgba(167,139,250,.12);
+
+    --num:'Space Grotesk','Noto Sans SC',sans-serif;
+    --font:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+    --radius:22px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;font-size:13.5px;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(1200px 760px at 50% -12%,#0b1416 0%,rgba(5,8,10,0) 60%),
+      radial-gradient(900px 420px at 12% 120%,rgba(63,224,208,.10),transparent 60%),
+      radial-gradient(820px 400px at 90% 122%,rgba(80,90,255,.10),transparent 60%);
+    background-attachment:fixed;}
+  @keyframes cta_sheen{0%{transform:translateX(-120%);}60%,100%{transform:translateX(260%);}}
+
+  /* 顶栏 */
+  .topbar{background:rgba(8,12,14,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+    padding:14px 34px;display:flex;align-items:center;gap:28px;position:sticky;top:0;z-index:20;}
   .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px;font-style:italic;letter-spacing:.2px;}
-  .logo .mk{width:24px;height:24px;background:linear-gradient(135deg,var(--cy),var(--cyD));border-radius:7px;position:relative;font-style:normal;}
-  .logo .mk::before{content:"◭";color:#06222a;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;}
+  .logo .mk{width:24px;height:24px;background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));border-radius:7px;position:relative;font-style:normal;}
+  .logo .mk::before{content:"◭";color:#052824;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;}
   .nav{display:flex;gap:26px;margin-left:8px;}
-  .nav a{color:var(--sub);font-size:14px;font-weight:600;text-decoration:none;position:relative;padding:4px 0;cursor:pointer;}
+  .nav a{color:var(--sub);font-size:14px;font-weight:500;text-decoration:none;position:relative;padding:4px 0;cursor:pointer;}
   .nav a.on{color:var(--ink);}
-  .nav a.on::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;border-radius:2px;background:var(--cy);}
+  .nav a.on::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;border-radius:2px;background:var(--teal);}
   .tools{margin-left:auto;display:flex;align-items:center;gap:16px;color:var(--sub);}
   .tools .ic{font-size:16px;cursor:pointer;opacity:.85;}
-  .tools .ava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#5eead4,#a78bfa);}
+  .tools .ava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--tealBright),var(--violetD));}
 
-  .wrap{max-width:1200px;margin:0 auto;padding:40px 24px 72px;}
-  .title{text-align:center;margin:4px 0 6px;font-size:34px;font-weight:800;letter-spacing:-.4px;}
-  .subtitle{text-align:center;color:var(--sub);font-size:14px;margin:0 auto 6px;max-width:640px;}
+  .wrap{max-width:1360px;margin:0 auto;padding:44px 24px 80px;}
+  .title{text-align:center;margin:4px 0 8px;font-size:38px;font-weight:700;letter-spacing:-.5px;
+    background:linear-gradient(180deg,#ffffff,#c7e6e2);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .subtitle{text-align:center;color:var(--sub);font-size:14.5px;margin:0 auto 6px;max-width:660px;}
+  .subtitle b{color:var(--teal);font-weight:600;}
 
-  .secbar{display:flex;align-items:center;gap:12px;margin:38px 0 18px;}
-  .secbar h2{font-size:22px;margin:0;font-weight:800;}
-  .secbar .pill{font-size:12px;font-weight:700;padding:3px 12px;border-radius:99px;}
-  .secbar .pill.person{background:var(--cyBg);color:var(--cy);}
-  .secbar .pill.ent{background:var(--violetBg);color:var(--violetD);}
-  .secbar .line{display:none;}
+  /* 模拟条 */
+  .simbar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;
+    background:var(--cardGrad);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:26px auto 4px;max-width:680px;
+    box-shadow:0 30px 70px -50px rgba(0,0,0,.9);}
+  .simbar .slab{font-size:13px;font-weight:700;color:var(--ink);}
+  .simbar .shint{font-size:11.5px;color:var(--dim);flex-basis:100%;text-align:center;line-height:1.6;}
+  .simsel{appearance:none;background:rgba(255,255,255,.03);border:1px solid var(--tealBd);color:var(--ink);
+    font-family:inherit;font-size:13px;font-weight:700;border-radius:11px;padding:9px 36px 9px 15px;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,var(--teal) 50%),linear-gradient(135deg,var(--teal) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;}
+  .simsel:focus{outline:none;border-color:var(--teal);}
+  .simsel option{background:#0e1618;color:var(--ink);}
 
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
-  @media(max-width:980px){.grid3,.grid4{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:600px){.grid3,.grid4{grid-template-columns:1fr}}
-
-  .card{background:var(--card);border:1px solid var(--panelBd);border-radius:var(--radius);padding:24px 22px;position:relative;display:flex;flex-direction:column;
-    box-shadow:0 20px 44px -30px rgba(0,0,0,.8);}
-  .card.reco{border-color:var(--cyBd);box-shadow:0 24px 54px -28px rgba(52,224,232,.35);}
-  .card.flag{border-color:rgba(167,139,250,.4);box-shadow:0 24px 54px -28px rgba(167,139,250,.35);}
-  .ribbon{position:absolute;top:-11px;right:16px;font-size:11px;font-weight:800;color:#06222a;padding:3px 12px;border-radius:99px;}
-  .ribbon.amber{background:linear-gradient(135deg,#5eead4,#34e0e8);}
-  .ribbon.violet{background:linear-gradient(135deg,#c4b5fd,#a78bfa);color:#1e1436;}
-
-  .badge{font-size:12.5px;font-weight:700;padding:4px 12px;border-radius:99px;display:inline-flex;align-items:center;gap:5px;align-self:flex-start;margin-bottom:14px;}
-  .b-teal{background:var(--cyBg);color:var(--cy);} .b-amber{background:var(--amberBg);color:var(--amberD);}
-  .b-green{background:var(--greenBg);color:var(--greenD);} .b-violet{background:var(--violetBg);color:var(--violetD);}
-  .price{font-size:32px;font-weight:800;letter-spacing:-.5px;color:#fff;}
-  .price small{font-size:13px;font-weight:600;color:var(--sub);margin-left:3px;}
-  .grant{font-size:12px;color:var(--sub);margin:6px 0 2px;}
-  .grant b{color:var(--cy);font-weight:800;}
-
-  .discs{display:flex;gap:8px;margin:14px 0 4px;}
-  .chip{flex:1;border:1px solid var(--panelBd);border-radius:12px;padding:9px 10px;text-align:center;background:var(--panel2);}
-  .chip .ck{font-size:10.5px;color:var(--dim);margin-bottom:2px;}
-  .chip .cv{font-size:16px;font-weight:800;color:#fff;}
-  .chip.recharge .cv{color:var(--cy);} .chip.func .cv{color:var(--amberD);}
-
-  .klabel{font-size:10.5px;color:var(--dim);letter-spacing:.4px;margin:16px 0 8px;font-weight:700;text-transform:uppercase;}
-  ul.bx{list-style:none;margin:0 0 6px;padding:0;}
-  ul.bx li{font-size:12.5px;padding:5px 0 5px 20px;position:relative;color:#d4d4d8;}
-  ul.bx li::before{content:"✓";position:absolute;left:0;top:5px;color:var(--cy);font-weight:800;font-size:11px;}
-  ul.bx li.grp{color:var(--sub);font-weight:700;font-size:11px;padding-left:0;margin-top:6px;}
-  ul.bx li.grp::before{content:"";}
-
-  .specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;}
-  .spec{border:1px solid var(--panelBd);border-radius:11px;padding:8px 10px;background:var(--panel2);}
-  .spec .sk{font-size:10px;color:var(--dim);}
-  .spec .sv{font-size:14px;font-weight:800;color:#fff;}
-
-  .btn{margin-top:auto;text-align:center;padding:11px;border-radius:12px;font-weight:700;font-size:13.5px;cursor:pointer;border:1px solid transparent;transition:filter .15s,background .15s;}
-  .btn:hover{filter:brightness(1.06);}
-  .btn.ghost{background:var(--panel2);border-color:var(--panelBd);color:var(--sub);}
-  .btn.teal,.btn.amber,.btn.green{background:linear-gradient(135deg,#e8fdff,#bff3f7);color:#06272b;}
-  .btn.violet{background:linear-gradient(135deg,#efeaff,#d6ccff);color:#1e1436;}
-
-  .scard{background:var(--card);border:1px solid var(--panelBd);border-radius:16px;padding:20px;display:flex;flex-direction:column;box-shadow:0 20px 44px -30px rgba(0,0,0,.8);}
-  .scard .stag{font-size:12px;font-weight:700;padding:3px 11px;border-radius:99px;display:inline-block;align-self:flex-start;margin-bottom:14px;}
-  .scard.a .stag{background:var(--cyBg);color:var(--cy);} .scard.g .stag{background:var(--cyBg);color:var(--cy);}
-  .scard.b .stag{background:var(--cyBg);color:var(--cy);} .scard.p .stag{background:var(--cyBg);color:var(--cy);}
-  .scard .sbig{font-size:24px;font-weight:800;margin:2px 0 4px;color:#fff;}
-  .scard .sbig small{font-size:13px;color:var(--sub);font-weight:600;}
-  .scard .sdesc{font-size:12px;color:var(--sub);margin:0 0 14px;min-height:32px;}
-  .scard .sin{width:100%;border:1px solid var(--panelBd);border-radius:10px;padding:10px 11px;font-size:13px;margin:2px 0 6px;font-family:inherit;background:var(--panel2);color:var(--ink);}
-  .scard .sin::placeholder{color:var(--dim);}
-  .scard .sbtn{margin-top:auto;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid transparent;transition:filter .15s;}
-  .scard .sbtn:hover{filter:brightness(1.06);}
-  .scard.a .sbtn,.scard.g .sbtn,.scard.b .sbtn{background:linear-gradient(135deg,#e8fdff,#bff3f7);color:#06272b;}
-  .scard.p .sbtn{background:transparent;border-color:var(--cyBd);color:var(--cy);}
-
-  .notes{background:var(--card);border:1px solid var(--panelBd);border-radius:16px;padding:18px 24px;margin-top:28px;}
-  .notes .klabel{margin-top:0;}
-  .notes ul{margin:0;padding-left:18px;} .notes li{font-size:12.5px;color:var(--sub);padding:4px 0;}
-  .notes li::marker{color:var(--cy);}
-  .footnote{text-align:center;color:var(--dim);font-size:11.5px;margin-top:18px;line-height:1.6;}
-
-  .tabs{display:flex;justify-content:center;gap:48px;border-bottom:1px solid var(--line);margin:24px 0 32px;}
+  /* 选项卡 */
+  .tabs{display:flex;justify-content:center;gap:48px;border-bottom:1px solid var(--line);margin:28px 0 34px;}
   .tab{position:relative;background:none;border:none;cursor:pointer;font-family:inherit;
     font-size:17px;font-weight:700;color:var(--dim);padding:10px 4px 14px;transition:color .18s;}
   .tab:hover{color:var(--sub);}
   .tab.active{color:var(--ink);}
   .tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2.5px;border-radius:2px;
-    background:linear-gradient(90deg,var(--cy),var(--cyD));}
+    background:linear-gradient(90deg,var(--tealBright),var(--tealDeep));}
   .panel{display:none;}
   .panel.show{display:block;}
 
-  /* 充值叠加 / 升级模拟 */
-  .simbar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;
-    background:var(--card);border:1px solid var(--panelBd);border-radius:14px;padding:14px 18px;margin:20px auto 4px;max-width:640px;}
-  .simbar .slab{font-size:13px;font-weight:700;color:var(--ink);}
-  .simbar .shint{font-size:11.5px;color:var(--dim);flex-basis:100%;text-align:center;}
-  .simsel{appearance:none;background:var(--panel2);border:1px solid var(--cyBd);color:var(--ink);
-    font-family:inherit;font-size:13px;font-weight:700;border-radius:10px;padding:9px 34px 9px 14px;cursor:pointer;
-    background-image:linear-gradient(45deg,transparent 50%,var(--cy) 50%),linear-gradient(135deg,var(--cy) 50%,transparent 50%);
-    background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;}
-  .simsel:focus{outline:none;border-color:var(--cy);}
-  .simsel option{background:#141417;color:var(--ink);}
+  .secbar{display:flex;align-items:center;gap:12px;margin:8px 0 20px;}
+  .secbar h2{font-size:22px;margin:0;font-weight:700;}
+  .secbar .pill{font-size:12px;font-weight:700;padding:4px 13px;border-radius:99px;}
+  .secbar .pill.person{background:var(--tealBg);color:var(--teal);border:1px solid var(--tealBd);}
+  .secbar .pill.ent{background:var(--violetBg);color:var(--violet);border:1px solid var(--violetBd);}
 
-  .btn.current{background:var(--panel2);border-color:var(--cyBd);color:var(--cy);}
-  .btn.upgrade{background:linear-gradient(135deg,#34e0e8,#0aa5b0);color:#04232a;}
-  .cur-tag{position:absolute;top:-11px;left:16px;font-size:11px;font-weight:800;color:#04232a;
-    background:linear-gradient(135deg,#5eead4,#34e0e8);padding:3px 12px;border-radius:99px;display:none;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  @media(max-width:1000px){.grid3,.grid4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){.grid3,.grid4{grid-template-columns:1fr}}
+
+  /* 卡片 */
+  .card{position:relative;background:var(--cardGrad);border:1px solid rgba(63,224,208,.12);border-radius:var(--radius);
+    padding:30px 24px 26px;display:flex;flex-direction:column;
+    box-shadow:0 0 0 1px rgba(63,224,208,.03),0 44px 100px -56px rgba(0,0,0,.9);}
+  .card.reco{border-color:var(--tealBd);
+    box-shadow:0 0 0 1px rgba(63,224,208,.06),0 0 80px -30px rgba(63,224,208,.32),0 44px 100px -50px rgba(0,0,0,.9);}
+  .card.flag{border-color:var(--violetBd);
+    box-shadow:0 0 0 1px rgba(167,139,250,.06),0 0 80px -30px rgba(167,139,250,.30),0 44px 100px -50px rgba(0,0,0,.9);}
+  .ribbon{position:absolute;top:-15px;right:22px;font-size:13px;font-weight:700;padding:8px 16px;border-radius:12px;}
+  .ribbon.amber{background:linear-gradient(135deg,#7af0e0,#39cfe0);color:#052824;box-shadow:0 10px 26px -8px rgba(63,224,208,.6);}
+  .ribbon.violet{background:linear-gradient(135deg,#d6ccff,#a78bfa);color:#1e1436;box-shadow:0 10px 26px -8px rgba(167,139,250,.6);}
+
+  .badge{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;border-radius:999px;
+    font-size:14px;font-weight:700;background:rgba(255,255,255,.03);align-self:flex-start;}
+  .badge.b-teal{border:1px solid var(--tealBd);color:var(--teal);}
+  .badge.b-amber{border:1px solid var(--goldBd);color:var(--gold);}
+  .badge.b-green{border:1px solid var(--tealBd);color:var(--teal);}
+  .badge.b-violet{border:1px solid var(--violetBd);color:var(--violet);}
+
+  .price{display:flex;align-items:baseline;gap:8px;margin:22px 0 0;}
+  .price .pn{font-family:var(--num);font-size:48px;font-weight:700;line-height:.9;color:#f4fbfa;letter-spacing:-1px;}
+  .price small{font-size:15px;color:var(--sub);font-weight:500;}
+  .grant{margin-top:14px;font-size:13.5px;color:var(--sub);}
+  .grant b{font-family:var(--num);font-weight:600;color:var(--teal);}
+
+  .discs{margin-top:18px;}
+  .chip{border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:center;background:var(--panel2);}
+  .chip .ck{font-size:12px;color:var(--dim2);}
+  .chip .cv{margin-top:5px;font-size:22px;font-weight:700;color:var(--teal);font-family:var(--num);}
+
+  .klabel{font-size:12px;color:var(--dim2);margin:24px 0 14px;font-weight:600;}
+  ul.bx{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;}
+  ul.bx li{position:relative;padding-left:26px;font-size:14px;color:#d5e3e1;}
+  ul.bx li::before{content:"✓";position:absolute;left:0;top:0;color:var(--teal);font-weight:700;}
+  ul.bx li.grp{color:var(--dim2);font-weight:700;font-size:11.5px;padding-left:0;margin-top:4px;letter-spacing:.4px;}
+  ul.bx li.grp::before{content:"";}
+
+  /* 主按钮 */
+  .btn{margin-top:24px;text-align:center;padding:15px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;
+    border:1px solid transparent;font-family:inherit;transition:filter .15s,transform .15s,box-shadow .15s;}
+  .btn.solid{background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));color:var(--tealInk);
+    box-shadow:0 0 0 1px rgba(150,255,240,.28),0 14px 34px -12px rgba(63,224,208,.5),inset 0 1px 0 rgba(255,255,255,.4);}
+  .btn.solid:hover{transform:translateY(-1px);filter:brightness(1.04);}
+  .btn.violetSolid{background:linear-gradient(135deg,#e7ddff,#c4b5fd);color:#1e1436;
+    box-shadow:0 0 0 1px rgba(210,196,255,.3),0 14px 34px -12px rgba(167,139,250,.5),inset 0 1px 0 rgba(255,255,255,.4);}
+  .btn.violetSolid:hover{transform:translateY(-1px);filter:brightness(1.04);}
+  .btn.ghost{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--sub);cursor:default;}
+  .btn.current{background:rgba(63,224,208,.06);border-color:var(--tealBd);color:var(--teal);cursor:default;}
+
+  /* ===== 累充升级 CTA ===== */
+  .upwrap{margin-top:24px;}
+  .upbox{position:relative;overflow:hidden;border-radius:16px;padding:20px;margin-bottom:14px;
+    background:radial-gradient(140% 130% at 100% 0%,rgba(63,224,208,.16),rgba(51,207,224,.02) 58%);
+    border:1px solid var(--tealBd);}
+  .card.flag .upbox{background:radial-gradient(140% 130% at 100% 0%,rgba(167,139,250,.18),rgba(167,139,250,.02) 58%);border-color:var(--violetBd);}
+  .upbox .ulead{font-size:12px;color:#7fa39f;margin-bottom:6px;}
+  .card.flag .upbox .ulead{color:#a89bd0;}
+  .uprow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+  .uprow .uamt{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
+  .uprow .uadd{font-family:var(--num);font-size:15px;font-weight:600;color:var(--teal);white-space:nowrap;}
+  .card.flag .uprow .uadd{color:var(--violet);}
+  .uprow .ubig{font-family:var(--num);font-size:40px;font-weight:700;line-height:1;color:#f4fbfa;white-space:nowrap;text-shadow:0 0 24px rgba(63,224,208,.5);}
+  .card.flag .uprow .ubig{text-shadow:0 0 24px rgba(167,139,250,.5);}
+  .usave{white-space:nowrap;font-size:11px;font-weight:700;color:#052824;background:var(--teal);padding:4px 10px;border-radius:999px;
+    box-shadow:0 6px 16px -4px rgba(63,224,208,.6);}
+  .card.flag .usave{background:var(--violet);color:#1e1436;box-shadow:0 6px 16px -4px rgba(167,139,250,.6);}
+  .usub{margin-top:12px;display:flex;align-items:baseline;gap:8px;font-size:12px;color:#5f7a78;flex-wrap:wrap;}
+  .usub .full{text-decoration:line-through;}
+  .usub .tip{color:#7fa39f;}
+  .card.flag .usub .tip{color:#a89bd0;}
+
+  .upbtn{position:relative;overflow:hidden;width:100%;border:none;cursor:pointer;border-radius:15px;padding:16px;font-family:inherit;
+    background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));
+    box-shadow:0 0 0 1px rgba(150,255,240,.3),0 14px 34px -8px rgba(63,224,208,.55),inset 0 1px 0 rgba(255,255,255,.45);
+    transition:box-shadow .15s,transform .15s;}
+  .upbtn:hover{transform:translateY(-1px);box-shadow:0 18px 44px -6px rgba(63,224,208,.85);}
+  .card.flag .upbtn{background:linear-gradient(135deg,#e7ddff,#c4b5fd);
+    box-shadow:0 0 0 1px rgba(210,196,255,.3),0 14px 34px -8px rgba(167,139,250,.55),inset 0 1px 0 rgba(255,255,255,.45);}
+  .card.flag .upbtn:hover{box-shadow:0 18px 44px -6px rgba(167,139,250,.85);}
+  .upbtn .sheen{position:absolute;top:0;left:0;width:38%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:cta_sheen 4.8s ease-in-out infinite;}
+  .upbtn .ulabel{position:relative;font-size:16px;font-weight:700;color:var(--tealInk);}
+  .card.flag .upbtn .ulabel{color:#1e1436;}
+
+  .uplink{margin-top:16px;text-align:center;}
+  .uplink a{font-size:13.5px;color:var(--sub);text-decoration:none;transition:color .15s;cursor:pointer;}
+  .uplink a:hover{color:var(--teal);}
+  .uplink a .n{font-family:var(--num);}
+  .uplink p{margin:7px 0 0;font-size:11px;color:#526867;}
+
+  .cur-tag{position:absolute;top:-15px;left:22px;font-size:13px;font-weight:700;color:#052824;
+    background:linear-gradient(135deg,#7af0e0,#39cfe0);padding:8px 16px;border-radius:12px;display:none;box-shadow:0 10px 26px -8px rgba(63,224,208,.6);}
   .card.iscur .cur-tag{display:inline-block;}
+
+  /* 星钻充值卡 */
+  .scard{background:var(--cardGrad);border:1px solid rgba(63,224,208,.12);border-radius:18px;padding:22px;display:flex;flex-direction:column;
+    box-shadow:0 44px 100px -56px rgba(0,0,0,.9);}
+  .scard .stag{display:inline-block;align-self:flex-start;font-size:12px;font-weight:700;padding:5px 13px;border-radius:999px;margin-bottom:16px;
+    background:var(--tealBg);color:var(--teal);border:1px solid var(--tealBd);}
+  .scard .sbig{font-size:14px;color:var(--sub);font-weight:500;margin-top:6px;}
+  .scard .sin{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:14px;margin:10px 0 8px;
+    font-family:inherit;background:rgba(255,255,255,.02);color:var(--ink);}
+  .scard .sin::placeholder{color:var(--dim);}
+  .scard .sdesc{font-size:12.5px;color:var(--sub);margin:8px 0 16px;min-height:18px;}
+  .scard .sbtn{margin-top:auto;text-align:center;padding:13px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;
+    transition:filter .15s,transform .15s;}
+  .scard.b .sbtn{background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));color:var(--tealInk);
+    box-shadow:0 14px 34px -12px rgba(63,224,208,.5);}
+  .scard.p .sbtn{background:transparent;border-color:var(--tealBd);color:var(--teal);}
+  .scard .sbtn:hover{transform:translateY(-1px);filter:brightness(1.04);}
+
+  /* 说明 */
+  .notes{background:var(--cardGrad);border:1px solid var(--line);border-radius:18px;padding:22px 26px;margin-top:32px;}
+  .notes .klabel{margin-top:0;}
+  .notes ul{margin:0;padding-left:18px;}
+  .notes li{font-size:12.5px;color:var(--sub);padding:5px 0;}
+  .notes li::marker{color:var(--teal);}
+  .notes b{color:var(--teal);font-weight:600;}
+  .footnote{text-align:center;color:var(--dim);font-size:11.5px;margin-top:20px;line-height:1.7;}
 </style>
 </head>
 <body>
@@ -170,7 +243,7 @@
         <option value="9999">大师版 · 9999 元</option>
         <option value="29999">至尊版 · 29999 元</option>
       </select>
-      <span class="shint">低于当前档位的套餐也可直接开通（购买后重置为该档权益、会员时长重置）；更高档位显示“再充 N 元升级”（补差升档，个人 / 团队统一按价格排序）。</span>
+      <span class="shint">低于当前档位的套餐也可直接开通（购买后重置为该档权益、会员时长重置）；更高档位显示"再充 N 元升级"（补差升档，个人 / 团队统一按价格排序）。</span>
     </div>
 
     <!-- 切换 -->
@@ -181,16 +254,16 @@
 
     <!-- 个人版 -->
     <div class="panel show" id="panel-person">
-    <div class="secbar"><h2>个人版</h2><span class="pill person">创作者 / 小团队</span><span class="line"></span></div>
+    <div class="secbar"><h2>个人版</h2><span class="pill person">创作者 / 小团队</span></div>
     <div class="grid3">
 
       <!-- 标准版 -->
       <div class="card" data-price="199" data-name="标准版">
         <span class="badge b-teal">✦ 标准版</span>
-        <div class="price">199<small>元 / 月</small></div>
+        <div class="price"><span class="pn">199</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>22000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">9 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">9 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -198,7 +271,6 @@
           <li>Seedance 2.0 VIP（720P）</li>
           <li>去除模型水印</li>
           <li>会员专享 · 无限次加速</li>
-         
         </ul>
         <div class="btn ghost">当前套餐</div>
       </div>
@@ -206,10 +278,10 @@
       <!-- 进阶版 -->
       <div class="card" data-price="899" data-name="进阶版">
         <span class="badge b-teal">✦✦ 进阶版</span>
-        <div class="price">899<small>元 / 月</small></div>
+        <div class="price"><span class="pn">899</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>105000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">85 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">85 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -217,19 +289,18 @@
           <li>Seedance 2.0 VIP（720P）</li>
           <li>去除模型水印</li>
           <li>会员专享 · 无限次加速</li>
-          
         </ul>
-        <div class="btn teal">立即开通</div>
+        <div class="btn solid">立即开通</div>
       </div>
 
       <!-- 专业版 -->
       <div class="card reco" data-price="2999" data-name="专业版">
-        <span class="ribbon amber">个人推荐</span>
+        <span class="ribbon amber">推荐</span>
         <span class="badge b-amber">♛ 专业版</span>
-        <div class="price">2999<small>元 / 月</small></div>
+        <div class="price"><span class="pn">2999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>370000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">8 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">8 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -237,9 +308,8 @@
           <li>Seedance 2.0 VIP（720P）</li>
           <li>去除模型水印</li>
           <li>会员专享 · 无限次加速</li>
-          
         </ul>
-        <div class="btn amber">立即开通</div>
+        <div class="btn solid">立即开通</div>
       </div>
 
     </div>
@@ -247,16 +317,16 @@
 
     <!-- 企业版 -->
     <div class="panel" id="panel-team">
-    <div class="secbar"><h2>企业版</h2><span class="pill ent">团队协作 / 管理</span><span class="line"></span></div>
+    <div class="secbar"><h2>企业版</h2><span class="pill ent">团队协作 / 管理</span></div>
     <div class="grid4">
 
       <!-- 高级版 -->
       <div class="card" data-price="999" data-name="高级版">
         <span class="badge b-green">🏢 高级版</span>
-        <div class="price">999<small>元 / 月</small></div>
+        <div class="price"><span class="pn">999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>117000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">85 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">85 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -269,16 +339,16 @@
           <li>项目权限管理</li>
           <li>团队人数 6 人</li>
         </ul>
-        <div class="btn green">立即开通</div>
+        <div class="btn solid">立即开通</div>
       </div>
 
       <!-- 豪华版 -->
       <div class="card" data-price="4999" data-name="豪华版">
         <span class="badge b-green">🏢 豪华版</span>
-        <div class="price">4999<small>元 / 月</small></div>
+        <div class="price"><span class="pn">4999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>620000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">8 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">8 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -289,16 +359,16 @@
           <li>项目权限管理</li>
           <li>团队人数 15 人</li>
         </ul>
-        <div class="btn green">立即开通</div>
+        <div class="btn solid">立即开通</div>
       </div>
 
       <!-- 大师版 -->
       <div class="card" data-price="9999" data-name="大师版">
         <span class="badge b-green">🏢 大师版</span>
-        <div class="price">9999<small>元 / 月</small></div>
+        <div class="price"><span class="pn">9999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>1330000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">75 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">75 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -309,17 +379,17 @@
           <li>项目权限管理</li>
           <li>团队人数 20 人</li>
         </ul>
-        <div class="btn green">立即开通</div>
+        <div class="btn solid">立即开通</div>
       </div>
 
       <!-- 至尊版 -->
       <div class="card flag" data-price="29999" data-name="至尊版">
         <span class="ribbon violet">旗舰</span>
         <span class="badge b-violet">👑 至尊版</span>
-        <div class="price">29999<small>元 / 月</small></div>
+        <div class="price"><span class="pn">29999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>4280000</b></div>
         <div class="discs">
-          <div class="chip recharge"><div class="ck">充值折扣</div><div class="cv">7 折</div></div>
+          <div class="chip"><div class="ck">充值折扣</div><div class="cv">7 折</div></div>
         </div>
         <div class="klabel">核心权益</div>
         <ul class="bx">
@@ -330,29 +400,29 @@
           <li>项目权限管理</li>
           <li>团队人数无上限</li>
         </ul>
-        <div class="btn violet">立即开通</div>
+        <div class="btn violetSolid">立即开通</div>
       </div>
 
     </div>
     </div><!-- /panel-team -->
 
     <!-- 星钻充值 -->
-    <div class="secbar"><h2>星钻充值</h2><span class="pill person">单纯充值 · 按量付费</span><span class="line"></span></div>
-    <p class="subtitle" style="margin:0 0 16px;">不开会员也能用。基础比例 1 元 = 100 星钻；充值折扣跟随你的会员套餐档位（套餐几折，充值即按几折发放积分）。</p>
+    <div class="secbar" style="margin-top:44px;"><h2>星钻充值</h2><span class="pill person">单纯充值 · 按量付费</span></div>
+    <p class="subtitle" style="margin:0 0 18px;">基础比例 1 元 = 100 星钻；充值折扣跟随会员套餐档位（充值按照套餐折扣发放积分）。</p>
     <div class="grid4">
-      
+
       <div class="scard b">
         <span class="stag">自定义充值</span>
-        <div class="sbig" style="font-size:14px;color:var(--sub);font-weight:600;margin-top:6px;">输入充值金额</div>
+        <div class="sbig">输入充值金额</div>
         <input class="sin" placeholder="元　=　积分">
-        <p class="sdesc" style="min-height:18px;">按你的会员套餐折扣到账（未开会员为 1 元 = 100 积分）。</p>
+        <p class="sdesc">按你的会员套餐折扣到账（未开会员为 1 元 = 100 积分）。</p>
         <div class="sbtn">确认充值</div>
       </div>
 
       <div class="scard p">
         <span class="stag">企业级折扣</span>
-        <div class="sbig" style="font-size:14px;color:var(--sub);font-weight:600;margin-top:6px;">专属方案</div>
-        <p class="sdesc" style="margin-top:8px;">大额充值可联系官方申请企业级折扣与专属充值方案。</p>
+        <div class="sbig">专属方案</div>
+        <p class="sdesc" style="margin-top:12px;">大额充值可联系官方申请企业级折扣与专属充值方案。</p>
         <div class="sbtn">联系官方</div>
       </div>
 
@@ -364,13 +434,14 @@
       <ul>
         <li>会员权益仅在会员周期内生效，过期未续费则无法享受会员权益。</li>
         <li>优惠说明：<b>充值折扣</b>为购买 / 充值积分时的价格折扣。</li>
-        <li>支持累充自动升档：以“当前档价 + 补差金额 = 下一档价”跨档。<b>升档仅升级折扣档位与会员权益、并重新计算会员到期时间；原有积分保留不清零，但不再重复发放新档位的一次性积分</b>（避免逐档补差反复领取积分）。</li>
+        <li>支持累充自动升档：以"当前档价 + 补差金额 = 下一档价"跨档。<b>升档仅升级折扣档位与会员权益、并重新计算会员到期时间；原有积分保留不清零，但不再重复发放新档位的一次性积分</b>。</li>
         <li>星钻可单独充值，比例 1 元 = 100 星钻；大额充值可联系官方申请企业级折扣与专属方案。</li>
       </ul>
     </div>
 
     <p class="footnote">＊本页为 7 档完整会员体系示意，价格 / 折扣 / 规格取自厂家方案，供确认最终版式。＊积分赠送、累充自动升档等功能以实际开发上线为准。</p>
   </div>
+
 <script>
   // 面板切换
   document.querySelectorAll('.tab').forEach(function(tab){
@@ -386,38 +457,76 @@
   // 充值叠加 / 升级模拟
   (function(){
     var cards = Array.prototype.slice.call(document.querySelectorAll('.card[data-price]'));
-    // 记录每张卡按钮的原始样式与文案，并注入“当前档位”标签
+    var fmt = function(n){ return n.toLocaleString('zh-CN'); };
+
+    // 记录每张卡按钮原始样式/文案，注入"当前档位"标签与升级区容器
     cards.forEach(function(c){
       var btn = c.querySelector('.btn');
       btn.dataset.baseCls = btn.className;
       btn.dataset.baseTxt = btn.textContent.trim();
+      // 主按钮的实心配色（团队旗舰用紫色）
+      btn.dataset.solidCls = c.classList.contains('flag') ? 'btn violetSolid' : 'btn solid';
+
       var tag = document.createElement('span');
       tag.className = 'cur-tag';
       tag.textContent = '当前档位';
       c.insertBefore(tag, c.firstChild);
+
+      // 升级 CTA 容器（默认隐藏）
+      var up = document.createElement('div');
+      up.className = 'upwrap';
+      up.style.display = 'none';
+      c.appendChild(up);
     });
-    var fmt = function(n){ return n.toLocaleString('zh-CN'); };
+
     function apply(cur){
       cards.forEach(function(c){
         var p = +c.dataset.price;
+        var name = c.dataset.name || '本档';
         var btn = c.querySelector('.btn');
-        c.classList.remove('locked','iscur');
+        var up = c.querySelector('.upwrap');
+        var solidCls = btn.dataset.solidCls;
+
+        c.classList.remove('iscur');
+        up.style.display = 'none';
+        up.innerHTML = '';
+        btn.style.display = '';
+
         if(cur === 0){
-          btn.className = btn.dataset.baseCls === 'btn ghost' ? 'btn teal' : btn.dataset.baseCls;
+          btn.className = btn.dataset.baseTxt === '当前套餐' ? solidCls : (btn.dataset.baseCls === 'btn ghost' ? solidCls : btn.dataset.baseCls);
           btn.textContent = btn.dataset.baseTxt === '当前套餐' ? '立即开通' : btn.dataset.baseTxt;
         } else if(p < cur){
-          btn.className = btn.dataset.baseCls === 'btn ghost' ? 'btn teal' : btn.dataset.baseCls;
+          btn.className = solidCls;
           btn.textContent = '立即开通';
         } else if(p === cur){
           c.classList.add('iscur');
           btn.className = 'btn current';
           btn.textContent = '当前套餐';
         } else {
-          btn.className = 'btn upgrade';
-          btn.textContent = '再充 ' + fmt(p - cur) + ' 元升级';
+          // 高档位：隐藏普通按钮，展示"累充升级"CTA
+          btn.style.display = 'none';
+          var add = p - cur;      // 需补差价
+          var save = cur;         // 已付部分 = 省下的钱
+          up.style.display = 'block';
+          up.innerHTML =
+            '<div class="upbox">' +
+              '<div class="ulead">升级至' + name + '仅需</div>' +
+              '<div class="uprow">' +
+                '<div class="uamt"><span class="uadd">再充</span>' +
+                  '<span class="ubig">¥' + fmt(add) + '</span></div>' +
+                '<span class="usave">省 ¥' + fmt(save) + '</span>' +
+              '</div>' +
+              '<div class="usub"><span class="full">全价 ¥' + fmt(p) + '</span>' +
+                '<span class="tip">仅补差价 · 原有积分保留 · 权益同步</span></div>' +
+            '</div>' +
+            '<button class="upbtn"><span class="sheen"></span>' +
+              '<span class="ulabel">立即累充升级</span></button>' +
+            '<div class="uplink"><a>或 直接开通（全价 <span class="n">' + fmt(p) + '</span> 元）</a>' +
+              '<p>全新开通，一次性积分正常发放</p></div>';
         }
       });
     }
+
     var sel = document.getElementById('curSel');
     apply(+sel.value);
     sel.addEventListener('change', function(){ apply(+sel.value); });
