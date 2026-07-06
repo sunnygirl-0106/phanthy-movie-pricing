@@ -559,8 +559,9 @@
         } else if(p < cur){
           btn.className = solidCls;
           btn.textContent = '立即开通';
-          // 降档：目标席位少于当前 → 需先手动禁用子账号
-          if(curInfo && curInfo.seat > seatVal(c)){
+          // 降档：仅当「团队档 → 更小的团队档」时才需先手动禁用子账号；
+          // 降到个人版（无团队功能）不弹窗，团队管理会随购买直接置灰停用。
+          if(curInfo && curInfo.seat > 1 && seatVal(c) > 1 && curInfo.seat > seatVal(c)){
             c.dataset.seatWarn = '1';
             c.dataset.warnCurName = curInfo.name;
             c.dataset.warnCurSeat = curInfo.seat === Infinity ? 'inf' : curInfo.seat;
