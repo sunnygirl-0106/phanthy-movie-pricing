@@ -164,6 +164,38 @@
   .renewhint{margin-top:10px;text-align:center;font-size:12px;color:#7fa39f;line-height:1.5;}
   .card.flag .renewhint{color:#a89bd0;}
 
+  /* ===== 降档席位提醒弹窗 ===== */
+  .modal-mask{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;
+    background:rgba(3,6,8,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+  .modal-mask.open{display:flex;}
+  .modal{width:100%;max-width:452px;background:linear-gradient(180deg,#101a1c,#0b1214);
+    border:1px solid var(--line);border-radius:20px;padding:30px 28px 26px;
+    box-shadow:0 40px 120px -30px rgba(0,0,0,.92),inset 0 1px 0 rgba(255,255,255,.04);
+    transform:translateY(10px) scale(.97);opacity:0;transition:transform .24s cubic-bezier(.2,.8,.2,1),opacity .24s;}
+  .modal-mask.open .modal{transform:none;opacity:1;}
+  .modal .m-ic{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:27px;
+    background:var(--goldBg);border:1px solid var(--goldBd);margin-bottom:18px;
+    box-shadow:0 0 0 6px rgba(214,178,120,.06);}
+  .modal h3{margin:0 0 12px;font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.2px;}
+  .modal .m-body{margin:0;color:var(--sub);font-size:14px;line-height:1.72;}
+  .modal .m-body b{color:var(--gold);font-weight:700;}
+  .modal .m-body .m-hi{color:var(--teal);font-weight:600;}
+  .modal .m-flow{margin:16px 0 0;display:flex;align-items:center;gap:10px;background:var(--panel2);
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-family:var(--num);font-weight:600;}
+  .modal .m-flow .s-from{color:var(--sub);}
+  .modal .m-flow .s-arrow{color:var(--dim);font-size:15px;}
+  .modal .m-flow .s-to{color:var(--teal);}
+  .modal .m-flow .s-cut{margin-left:auto;font-size:12px;font-weight:700;color:#052824;background:var(--gold);
+    padding:4px 11px;border-radius:999px;font-family:var(--font);}
+  .modal .m-tip{margin:12px 0 0;font-size:12px;color:var(--dim2);line-height:1.6;}
+  .modal .m-btns{margin-top:24px;display:flex;gap:12px;}
+  .modal .m-btns button{flex:1;padding:13px;border-radius:12px;font-family:inherit;font-weight:700;font-size:14px;
+    cursor:pointer;border:1px solid transparent;transition:transform .15s,filter .15s,border-color .15s,color .15s;}
+  .modal .m-cancel{background:transparent;border-color:var(--line);color:var(--sub);}
+  .modal .m-cancel:hover{border-color:var(--dim2);color:var(--ink);}
+  .modal .m-go{background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));color:var(--tealInk);}
+  .modal .m-go:hover{filter:brightness(1.05);transform:translateY(-1px);}
+
   .upbtn{position:relative;overflow:hidden;width:100%;border:none;cursor:pointer;border-radius:15px;padding:16px;font-family:inherit;
     background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));
     box-shadow:0 0 0 1px rgba(150,255,240,.3),0 14px 34px -8px rgba(63,224,208,.55),inset 0 1px 0 rgba(255,255,255,.45);
@@ -262,7 +294,7 @@
     <div class="grid3">
 
       <!-- 标准版 -->
-      <div class="card" data-price="199" data-name="标准版">
+      <div class="card" data-price="199" data-name="标准版" data-seat="1">
         <span class="badge b-teal">✦ 标准版</span>
         <div class="price"><span class="pn">199</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>22000</b></div>
@@ -280,7 +312,7 @@
       </div>
 
       <!-- 进阶版 -->
-      <div class="card" data-price="899" data-name="进阶版">
+      <div class="card" data-price="899" data-name="进阶版" data-seat="1">
         <span class="badge b-teal">✦✦ 进阶版</span>
         <div class="price"><span class="pn">899</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>105000</b></div>
@@ -298,7 +330,7 @@
       </div>
 
       <!-- 专业版 -->
-      <div class="card reco" data-price="2999" data-name="专业版">
+      <div class="card reco" data-price="2999" data-name="专业版" data-seat="1">
         <span class="ribbon amber">推荐</span>
         <span class="badge b-amber">♛ 专业版</span>
         <div class="price"><span class="pn">2999</span><small>元 / 月</small></div>
@@ -325,7 +357,7 @@
     <div class="grid4">
 
       <!-- 高级版 -->
-      <div class="card" data-price="999" data-name="高级版">
+      <div class="card" data-price="999" data-name="高级版" data-seat="6">
         <span class="badge b-green">🏢 高级版</span>
         <div class="price"><span class="pn">999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>117000</b></div>
@@ -347,7 +379,7 @@
       </div>
 
       <!-- 豪华版 -->
-      <div class="card" data-price="4999" data-name="豪华版">
+      <div class="card" data-price="4999" data-name="豪华版" data-seat="15">
         <span class="badge b-green">🏢 豪华版</span>
         <div class="price"><span class="pn">4999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>620000</b></div>
@@ -367,7 +399,7 @@
       </div>
 
       <!-- 大师版 -->
-      <div class="card" data-price="9999" data-name="大师版">
+      <div class="card" data-price="9999" data-name="大师版" data-seat="20">
         <span class="badge b-green">🏢 大师版</span>
         <div class="price"><span class="pn">9999</span><small>元 / 月</small></div>
         <div class="grant">一次性发放积分 <b>1330000</b></div>
@@ -387,7 +419,7 @@
       </div>
 
       <!-- 至尊版 -->
-      <div class="card flag" data-price="29999" data-name="至尊版">
+      <div class="card flag" data-price="29999" data-name="至尊版" data-seat="inf">
         <span class="ribbon violet">旗舰</span>
         <span class="badge b-violet">👑 至尊版</span>
         <div class="price"><span class="pn">29999</span><small>元 / 月</small></div>
@@ -446,6 +478,24 @@
     <p class="footnote">＊本页为 7 档完整会员体系示意，价格 / 折扣 / 规格取自厂家方案，供确认最终版式。＊积分赠送、累充自动升档等功能以实际开发上线为准。</p>
   </div>
 
+  <!-- 降档席位提醒弹窗 -->
+  <div class="modal-mask" id="seatModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="m-ic">⚠️</div>
+      <h3>请先精简团队成员</h3>
+      <p class="m-body" id="seatMsg"></p>
+      <div class="m-flow" id="seatFlow">
+        <span class="s-from"></span><span class="s-arrow">→</span><span class="s-to"></span>
+        <span class="s-cut"></span>
+      </div>
+      <p class="m-tip">前往【团队管理 · 子账号】禁用超出席位的成员后，即可开通新套餐；被禁用成员的资料与项目会保留。</p>
+      <div class="m-btns">
+        <button class="m-cancel" type="button" data-close>暂不开通</button>
+        <button class="m-go" type="button" data-close>去团队管理禁用</button>
+      </div>
+    </div>
+  </div>
+
 <script>
   // 面板切换
   document.querySelectorAll('.tab').forEach(function(tab){
@@ -462,6 +512,11 @@
   (function(){
     var cards = Array.prototype.slice.call(document.querySelectorAll('.card[data-price]'));
     var fmt = function(n){ return n.toLocaleString('zh-CN'); };
+    var seatVal = function(c){ return c.dataset.seat === 'inf' ? Infinity : +c.dataset.seat; };
+    var infoOf = function(price){
+      var c = cards.filter(function(x){ return +x.dataset.price === price; })[0];
+      return c ? { name: c.dataset.name || '当前套餐', seat: seatVal(c) } : null;
+    };
 
     // 记录每张卡按钮原始样式/文案，注入"当前档位"标签与升级区容器
     cards.forEach(function(c){
@@ -484,6 +539,7 @@
     });
 
     function apply(cur){
+      var curInfo = infoOf(cur);
       cards.forEach(function(c){
         var p = +c.dataset.price;
         var name = c.dataset.name || '本档';
@@ -495,6 +551,7 @@
         up.style.display = 'none';
         up.innerHTML = '';
         btn.style.display = '';
+        delete c.dataset.seatWarn;
 
         if(cur === 0){
           btn.className = btn.dataset.baseTxt === '当前套餐' ? solidCls : (btn.dataset.baseCls === 'btn ghost' ? solidCls : btn.dataset.baseCls);
@@ -502,6 +559,13 @@
         } else if(p < cur){
           btn.className = solidCls;
           btn.textContent = '立即开通';
+          // 降档：目标席位少于当前 → 需先手动禁用子账号
+          if(curInfo && curInfo.seat > seatVal(c)){
+            c.dataset.seatWarn = '1';
+            c.dataset.warnCurName = curInfo.name;
+            c.dataset.warnCurSeat = curInfo.seat === Infinity ? 'inf' : curInfo.seat;
+            c.dataset.warnSeat = seatVal(c);
+          }
         } else if(p === cur){
           // 当前档位：仍可再次购买 —— 作为「续费」延长会员时长
           c.classList.add('iscur');
@@ -537,6 +601,47 @@
     var sel = document.getElementById('curSel');
     apply(+sel.value);
     sel.addEventListener('change', function(){ apply(+sel.value); });
+
+    // ===== 降档席位提醒弹窗 =====
+    var modal = document.getElementById('seatModal');
+    function openSeat(c){
+      var curName = c.dataset.warnCurName;
+      var curSeat = c.dataset.warnCurSeat;      // 数字字符串或 'inf'
+      var seat = +c.dataset.warnSeat;
+      var name = c.dataset.name;
+      var unlimited = curSeat === 'inf';
+      var msg = document.getElementById('seatMsg');
+      var flow = document.getElementById('seatFlow');
+      if(unlimited){
+        msg.innerHTML = '当前「<span class="m-hi">' + curName + '</span>」团队人数无上限，'
+          + '而「<span class="m-hi">' + name + '</span>」仅含 <b>' + seat + '</b> 个席位。'
+          + '开通前请先将团队人数压缩到 <b>' + seat + ' 人</b>以内。';
+        flow.querySelector('.s-from').textContent = '无上限';
+        flow.querySelector('.s-to').textContent = seat + ' 人';
+        flow.querySelector('.s-cut').textContent = '压缩至 ' + seat + ' 人';
+      } else {
+        var n = (+curSeat) - seat;
+        msg.innerHTML = '从「<span class="m-hi">' + curName + '</span>」（' + curSeat + ' 人）降到'
+          + '「<span class="m-hi">' + name + '</span>」（' + seat + ' 人），团队席位减少。'
+          + '开通前请先手动禁用 <b>' + n + ' 个子账号</b>，使团队人数不超过 <b>' + seat + ' 人</b>。';
+        flow.querySelector('.s-from').textContent = curSeat + ' 人';
+        flow.querySelector('.s-to').textContent = seat + ' 人';
+        flow.querySelector('.s-cut').textContent = '需禁用 ' + n + ' 个';
+      }
+      modal.classList.add('open');
+    }
+    function closeSeat(){ modal.classList.remove('open'); }
+    modal.addEventListener('click', function(e){
+      if(e.target === modal || e.target.hasAttribute('data-close')) closeSeat();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeSeat(); });
+
+    // 拦截"立即开通"点击：降档且席位不足时先弹窗提醒
+    cards.forEach(function(c){
+      c.querySelector('.btn').addEventListener('click', function(){
+        if(c.dataset.seatWarn) openSeat(c);
+      });
+    });
   })();
 </script>
 </body>
