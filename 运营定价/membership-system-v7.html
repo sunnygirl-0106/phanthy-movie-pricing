@@ -567,12 +567,12 @@
             c.dataset.warnSeat = seatVal(c);
           }
         } else if(p === cur){
-          // 当前档位：仍可再次购买 —— 作为「续费」延长会员时长
+          // 当前档位：仍可再次购买 —— 重新购买，会员时长按 30 天重新起算
           c.classList.add('iscur');
           btn.className = solidCls;
-          btn.textContent = '立即续费';
+          btn.textContent = '重新购买';
           up.style.display = 'block';
-          up.innerHTML = '<div class="renewhint">续费延长会员时长 · 权益与折扣保持不变</div>';
+          up.innerHTML = '<div class="renewhint">重新购买后会员时长按 30 天重新计算 · 权益与折扣不变</div>';
         } else {
           // 高档位：隐藏普通按钮，展示"累充升级"CTA
           btn.style.display = 'none';
