@@ -160,6 +160,10 @@
   .usub .tip{color:#7fa39f;}
   .card.flag .usub .tip{color:#a89bd0;}
 
+  /* 当前套餐续费提示 */
+  .renewhint{margin-top:10px;text-align:center;font-size:12px;color:#7fa39f;line-height:1.5;}
+  .card.flag .renewhint{color:#a89bd0;}
+
   .upbtn{position:relative;overflow:hidden;width:100%;border:none;cursor:pointer;border-radius:15px;padding:16px;font-family:inherit;
     background:linear-gradient(135deg,var(--tealBright),var(--tealDeep));
     box-shadow:0 0 0 1px rgba(150,255,240,.3),0 14px 34px -8px rgba(63,224,208,.55),inset 0 1px 0 rgba(255,255,255,.45);
@@ -499,9 +503,12 @@
           btn.className = solidCls;
           btn.textContent = '立即开通';
         } else if(p === cur){
+          // 当前档位：仍可再次购买 —— 作为「续费」延长会员时长
           c.classList.add('iscur');
-          btn.className = 'btn current';
-          btn.textContent = '当前套餐';
+          btn.className = solidCls;
+          btn.textContent = '立即续费';
+          up.style.display = 'block';
+          up.innerHTML = '<div class="renewhint">续费延长会员时长 · 权益与折扣保持不变</div>';
         } else {
           // 高档位：隐藏普通按钮，展示"累充升级"CTA
           btn.style.display = 'none';

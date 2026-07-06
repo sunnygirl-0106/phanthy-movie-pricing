@@ -1,0 +1,11 @@
+# OS 垃圾文件
+.DS_Store
+
+# LibreOffice/WPS 临时锁文件
+.~lock.*#
+
+# 内部资料（表格 / PDF / Word），不进公开仓库
+*.xlsx
+*.pdf
+*.docx
+*.m4a
